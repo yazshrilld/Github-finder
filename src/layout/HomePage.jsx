@@ -2,19 +2,23 @@ import { useState } from "react";
 import { ReactComponent as DarkIcon } from "../assets/svg/darkIcon.svg";
 import { ReactComponent as Lighthcon } from "../assets/svg/lightIcon.svg";
 import { ReactComponent as SearchIcon } from "../assets/svg/searchIcon.svg";
-import { ReactComponent as UserIcon } from "../assets/svg/githubDpIcon.svg";
 import { ReactComponent as LocateIcon } from "../assets/svg/locationIcon.svg";
 import { ReactComponent as UrlIcons } from "../assets/svg/urlIcon.svg";
 import { ReactComponent as TwitterIcon } from "../assets/svg/twitterIcon.svg";
 import { ReactComponent as OfficeIcon } from "../assets/svg/officeBuildingIcon.svg";
-import avatar from "../assets/img/Bitmap.png"
+import avatar from "../assets/img/Bitmap.png";
 import Axios from "../../axios";
 
 import "./HomePage.css";
 
 const HomePage = () => {
   const [theme, setTheme] = useState("light");
-  const [username, setUsername] = useState("")
+  const [username, setUsername] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [textContent, setTextContent] = useState("");
+
+  console.log({error, textContent});
 
   const handleThemeSwitch = () => {
     const html = document.querySelector("html");
@@ -29,13 +33,31 @@ const HomePage = () => {
 
   const handleSearchOnChange = (e) => {
     setUsername(e.target.value);
-  }
+    if(e.target.value !== "") {
+      setError("")
+    } else if(e.target.value === "") {
+      setError("type a text")
+    }
+  };
 
-  const getGithubUser = async() => {
-    console.log({username});
-    const res = await Axios.get(`/${username}`)
-    console.log({res});
-  }
+  const getGithubUser = () => {
+    setLoading(true);
+    Axios.get(`/${username}`)
+      .then((res) => {
+        if (res) {
+          console.log({ res });
+        }
+      })
+      .catch((err) => {
+        console.log({ err });
+        setError(err?.response?.data?.message);
+        setTextContent("This is an error");
+      })
+      .finally(() => {
+        setLoading(false);
+        // setTextContent("");
+      });
+  };
 
   return (
     <>
@@ -58,9 +80,15 @@ const HomePage = () => {
                 {theme === "light" ? "DARK" : "LIGHT"}
               </p>
               {theme === "light" ? (
-                <DarkIcon className="w-[30px] h-[30px] cursor-pointer" onClick={handleThemeSwitch} />
+                <DarkIcon
+                  className="w-[30px] h-[30px] cursor-pointer"
+                  onClick={handleThemeSwitch}
+                />
               ) : (
-                <Lighthcon className="w-[50px] h-[30px] cursor-pointer" onClick={handleThemeSwitch} />
+                <Lighthcon
+                  className="w-[50px] h-[30px] cursor-pointer"
+                  onClick={handleThemeSwitch}
+                />
               )}
             </div>
           </div>
@@ -72,14 +100,23 @@ const HomePage = () => {
               className="w-full h-[3.5rem] bg-white rounded-[10px] border-0 outline-0 p-[0_3rem] shadow-xl text-[#4B6A9B] dark:text-white dark:bg-[#1E2A47]"
               onChange={handleSearchOnChange}
             />
-            <button className="absolute right-2 top-1.5 bg-[#0079FF] w-[5rem] h-[2.8rem] rounded-[10px] text-white" onClick={getGithubUser}>
-              Search
+            <button
+              className={`absolute right-2 top-1.5 bg-[#0079FF] w-[5rem] h-[2.8rem] rounded-[10px] text-white ${loading ? "text-xs w-[7rem]" : ""} ${error ? "bg-[#0079FF20] dark:bg-[#0079FF10] dark:text-slate-700" : ""}`}
+              onClick={getGithubUser}
+              disabled={error}
+            >
+               {loading ? "Searching....." : "Search"}
             </button>
+          <p className="absolute right-[20%] top-[15px] text-red-500">{error}</p>
           </div>
+            {/* <p className="text-yellow-600">{textContent}</p> */}
           <div className="relative bg-white mt-[2rem] flex md:gap-2 shadow-xl h-[60vh] md:h-[60vh] dark:bg-[#1E2A47] rounded-[10px]">
             <div className="m-[10px] ml-[30px] md:ml-[7rem] lg:ml-[30px] rounded-[50%]">
-              <img src={avatar} alt="github-user-profile-picture" className='h-[8rem] w-[9rem] rounded-full object-center m-3' />
-              {/* <UserIcon /> */}
+              <img
+                src={avatar}
+                alt="github-user-profile-picture"
+                className="h-[90px] w-[90px] rounded-full object-center m-3 md:h-[7rem] md:w-[7rem] md:rounded-full"
+              />
             </div>
             <div className="m-[10px] w-full pr-[20px]">
               <div className="flex flex-col justify-between md:flex-col lg:flex-row">
