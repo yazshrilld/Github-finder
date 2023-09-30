@@ -38,3 +38,5 @@ Axios.post(url, payload)
         }));
         setTextContent("");
       });
+
+      console.log({avatar_url, login, twitter_username, bio, created_at, public_repos, followers, following, location, blog, organizations_url});
