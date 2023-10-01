@@ -7,10 +7,11 @@ import { ReactComponent as UrlIcons } from "../assets/svg/urlIcon.svg";
 import { ReactComponent as TwitterIcon } from "../assets/svg/twitterIcon.svg";
 import { ReactComponent as OfficeIcon } from "../assets/svg/officeBuildingIcon.svg";
 import avatar from "../assets/img/Bitmap.png";
-import Axios from "../../axios";
 import dayjs from "dayjs";
-
 import "./HomePage.css";
+import axios from "axios";
+
+const baseURL = `https://api.github.com/users`
 
 const HomePage = () => {
   const [theme, setTheme] = useState("light");
@@ -19,6 +20,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(false);
   const [textContent, setTextContent] = useState("");
   const [userData, setUserData] = useState({});
+  console.log({baseURL});
 
   console.log({ error, textContent, userData });
   const {
@@ -69,9 +71,9 @@ const HomePage = () => {
     }
   };
 
-  const getGithubUser = () => {
+  const getGithubUser = async () => {
     setLoading(true);
-    Axios.get(`/${username}`)
+    await axios.get(`${baseURL}/${username}`)
       .then((res) => {
         if (res) {
           console.log({ res });
