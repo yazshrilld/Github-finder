@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ReactComponent as DarkIcon } from "../assets/svg/darkIcon.svg";
+import { ReactComponent as DarkIcon } from "../assets/svg/DarkIcon.svg";
 import { ReactComponent as Lighthcon } from "../assets/svg/lightIcon.svg";
 import { ReactComponent as SearchIcon } from "../assets/svg/searchIcon.svg";
 import { ReactComponent as LocateIcon } from "../assets/svg/locationIcon.svg";
