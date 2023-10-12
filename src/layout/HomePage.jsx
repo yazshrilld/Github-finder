@@ -18,11 +18,8 @@ const HomePage = () => {
   const [username, setUsername] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [textContent, setTextContent] = useState("");
   const [userData, setUserData] = useState({});
-  console.log({baseURL});
 
-  console.log({ error, textContent, userData });
   const {
     avatar_url,
     login,
@@ -37,19 +34,7 @@ const HomePage = () => {
     organizations_url,
   } = userData;
 
-  console.log({
-    avatar_url,
-    login,
-    twitter_username,
-    bio,
-    created_at,
-    public_repos,
-    followers,
-    following,
-    location,
-    blog,
-    organizations_url,
-  });
+  console.log({userData});
 
   const handleThemeSwitch = () => {
     const html = document.querySelector("html");
@@ -76,18 +61,15 @@ const HomePage = () => {
     await axios.get(`${baseURL}/${username}`)
       .then((res) => {
         if (res) {
-          console.log({ res });
           setUserData(res?.data);
         }
       })
       .catch((err) => {
-        console.log({ err });
         setError(err?.response?.data?.message);
         setTextContent("This is an error");
       })
       .finally(() => {
         setLoading(false);
-        // setTextContent("");
       });
   };
 
@@ -170,7 +152,7 @@ const HomePage = () => {
                 </div>
                 <div className="text-[#697C9A] mt-[10px] md:mr-[25px] dark:text-white">
                   <span>Joined </span>
-                  <span>{dayjs(created_at).format("DD-MM-YYYY")}</span>
+                  <span>{dayjs(created_at).format("DD-MMM-YYYY")}</span>
                 </div>
               </div>
               <div className="absolute top-[18%] left-10 w-[70%] mt-[30px] md:left-[18%] lg:relative lg:-mt-[90px] lg:w-full lg:-ml-[6rem]">
